@@ -1,0 +1,1159 @@
+/* =========================================================
+   متغيرات الألوان — عدّل هذي القيم بألوان البراند الحقيقية
+   لما تجهز اللوجو، وكل الموقع بينعدل تلقائياً
+   ========================================================= */
+:root {
+  --color-bg: #efdecd; /* البيج الفاتح — لون البراند الفاتح */
+  --color-ink: #2b1f14; /* بني داكن جداً — للنصوص (مشتق للتباين، مو من ألوان البراند مباشرة) */
+  --color-gold: #ad8127; /* الذهبي — لون البراند الداكن، للعناوين والأزرار */
+  --color-copper: #8a6420; /* درجة أغمق من الذهبي — للنصوص الثانوية */
+  --color-card: #fbf6ef; /* أفتح من الخلفية — لتمييز البطاقات */
+  --color-border: #e3cba6; /* درجة بين البيج والذهبي — للحدود */
+
+  /* ألوان النصوص فوق الخلفيات الغامقة (الهيرو فوق الفيديو، وقسم الـ Scrollytelling).
+     نستخدمها بكل مكان فيه خلفية غامقة عشان العناوين والنصوص تكون موحّدة اللون */
+  --color-cream: #f6ead9; /* كريمي فاتح — للعناوين والنصوص فوق الغامق */
+  --color-gold-light: #ebcb8b; /* ذهبي فاتح — للنص الثانوي واللمسات فوق الغامق (فتّحناه شوي عشان يبان فوق لقطات الفيديو الذهبية) */
+
+  /* أعلى ارتفاع متوقع للهيدر (وضعه الطبيعي قبل التمرير، بالشاشات الكبيرة).
+     نستخدمه بمكانين: نعوّض به مساحة تحت الناف الثابت (body padding-top)،
+     ونفس القيمة تقريباً نستخدمها كهامش تمرير (scroll-margin-top) عشان
+     أي قسم نوصله بالتنقل الناعم ما يطلع مغطّى تحت الناف */
+  --header-height: 150px;
+
+  --font-display: "El Messiri", sans-serif; /* للعناوين — كان Amiri قبل */
+  --font-body: "Tajawal", sans-serif;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* تنقل هادي بدل القفزة المفاجئة — لما تضغط رابط بالناف (زي "الأكثر مبيعاً"
+   أو "تواصل معنا")، الصفحة تنزلك بسلاسة بدل ما "تقطع" فجأة لمكان ثاني */
+html {
+  scroll-behavior: smooth;
+}
+
+/* يعطي مسافة فوق كل قسم عند القفز له، عشان الناف الثابت (fixed)
+   ما يغطي بداية القسم أو العنوان */
+section[id] {
+  scroll-margin-top: var(--header-height);
+}
+
+/* لو الزائر مفعّل "تقليل الحركة" بجهازه، نلغي التنقل الناعم ونخليه فوري */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+}
+
+body {
+  font-family: var(--font-body);
+  background: var(--color-bg);
+  color: var(--color-ink);
+  line-height: 1.7;
+
+  /* تم إلغاء الـ padding-top لكي يرتفع قسم الهيرو للأعلى ويدخل خلف الهيدر الشفاف */
+  padding-top: 0;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+h1,
+h2 {
+  font-family: var(--font-display);
+  font-weight: 600; /* El Messiri بوزن 700 ثقيل شوي — 600 أنعم وأفخم */
+}
+
+/* =========================================================
+   Preloader / Splash Screen
+   ========================================================= */
+.preloader {
+  position: fixed;
+  inset: 0;
+  z-index: 9999; /* لازم يكون أعلى من z-index الهيدر (1000) عشان يغطيه وهو ظاهر */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--color-bg);
+
+  perspective: 800px; /* عشان rotateY يعطي إحساس عمق حقيقي، مو بس تصغير/تكبير */
+
+  transition:
+    opacity 0.5s ease,
+    visibility 0.5s ease;
+}
+
+/* الحالة اللي يضيفها JS لما الصفحة تخلص تحميل — تختفي بنعومة */
+.preloader.is-hidden {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.preloader__logo-wrap {
+  position: relative;
+  width: 140px;
+  height: 140px;
+  transform-style: preserve-3d; /* يخلي المتصفح يحسب الوشين بفضاء 3D حقيقي */
+  animation: logoSpin3D 2.4s infinite linear;
+}
+
+.preloader__logo-face {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  backface-visibility: hidden; /* أهم سطر: يخفي أي وش يكون "مولّي ظهره" للزائر */
+
+  /* توهج ذهبي خفيف خلف الشعار يعطيه عمق وفخامة
+     (حطيناه هنا على كل وش لحاله، مب على الحاوية، لأن filter
+     على عنصر أب فيه preserve-3d ممكن "يسطّح" التأثير الثلاثي الأبعاد بمتصفحات معينة) */
+  filter: drop-shadow(0 10px 20px rgba(173, 129, 39, 0.4));
+}
+
+/* الوش الخلفي مُدوّر مسبقاً 180 درجة، عشان لما يجي دوره يبان
+   بشكل طبيعي (مو معكوس) بدل ما يكون امتداد معكوس للوش الأمامي */
+.preloader__logo-face--back {
+  transform: rotateY(180deg);
+}
+
+@keyframes logoSpin3D {
+  from {
+    transform: rotateY(0deg);
+  }
+  to {
+    transform: rotateY(360deg);
+  }
+}
+
+/* لو الزائر مفعّل "تقليل الحركة"، نوقف الدوران ونخليه ثابت */
+@media (prefers-reduced-motion: reduce) {
+  .preloader__logo-wrap {
+    animation: none;
+  }
+}
+
+/* تُضاف على <body> عن طريق JS طول ما شاشة البداية ظاهرة، عشان
+   الزائر ما يقدر يسكرول خلف الـ Preloader وهو لسا ما خلص —
+   وتُشال تلقائياً بنفس اللحظة اللي تختفي فيها الشاشة (script.js) */
+.no-scroll {
+  overflow: hidden;
+  height: 100vh; /* لضمان تجميد الصفحة على الارتفاع الحالي */
+}
+
+/* ===== Header ===== */
+.header {
+  /* جعلنا الخلفية شفافة تماماً والحدود مخفية في البداية لكي يظهر فيديو الهيرو خلفها */
+  background: transparent;
+  border-bottom: 1px solid transparent;
+
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 1000;
+  transition: all 0.3s ease;
+}
+
+/* الحالة اللي يضيفها JS لما الزائر ينزل بالصفحة — الناف يصغر
+   ويصير شفاف شوي مع تمويه خلفي (زي مثال Overwatch) */
+.header.is-scrolled {
+  background: rgba(239, 222, 205, 0.72); /* نفس --color-bg بس بشفافية */
+  border-color: transparent;
+  box-shadow: 0 2px 16px rgba(0, 0, 0, 0.08);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px); /* لدعم Safari */
+}
+
+.header__inner {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 1.25rem 1.5rem;
+  position: relative; /* عشان زر الهمبرغر (position: absolute) يتموضع بالنسبة له، مب بالنسبة للصفحة كلها */
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  transition: padding 0.3s ease;
+}
+
+.header.is-scrolled .header__inner {
+  padding: 0.65rem 1.5rem; /* أقل ارتفاعاً عشان ما ياكل مساحة الشاشة */
+}
+
+.brand-name {
+  font-family: var(--font-display);
+  font-size: 1.4rem;
+  font-weight: 700;
+}
+
+.brand-logo {
+  height: 109px; /* كبّرناه من 42px الأصلية — يبان بوضوح أكتر بالهيدر، وينصغر تلقائياً لـ 48px لما الزائر ينزل (شوف .header.is-scrolled .brand-logo تحت) */
+  width: auto;
+  transition:
+    height 0.3s ease,
+    filter 0.3s ease;
+
+  /* أعلى الصفحة: الهيدر شفاف فوق الهيرو الغامق — نفتّح الذهبي شوي ونحط
+     توهج داكن خفيف حول الخطوط الرفيعة عشان تنفصل عن أي لقطة فاتحة بالفيديو.
+     (بالـ CSS بس، بدون ما نلمس ملف الصورة) */
+  filter: brightness(1.25) saturate(1.15)
+    drop-shadow(0 1px 2px rgba(0, 0, 0, 0.6))
+    drop-shadow(0 0 8px rgba(0, 0, 0, 0.35));
+}
+
+.header.is-scrolled .brand-logo {
+  height: 48px; /* كان 30px — صغير لدرجة "KAWKAB" ما تنقرأ؛ 48px يضل الناف مضغوط بس الشعار واضح */
+
+  /* بعد التمرير الهيدر صار بيج فاتح — نعكس: نغمّق الذهبي بدل ما نفتّحه */
+  filter: brightness(0.7) saturate(1.3);
+}
+
+/* روابط الناف وخطوط الهمبرغر فاتحة طول ما الهيدر شفاف فوق الهيرو الغامق،
+   وترجع لونها الغامق العادي لما يتحول الهيدر لبيج بعد التمرير */
+.header:not(.is-scrolled) .nav a {
+  color: var(--color-cream);
+}
+
+.header:not(.is-scrolled) .nav a:hover {
+  color: var(--color-gold-light);
+}
+
+.header:not(.is-scrolled) .nav-toggle span {
+  background: var(--color-cream);
+}
+
+/* الهمبرغر يصغر شوي بنفس لحظة تصغير الشعار — موقعه (top/left) يضبط
+   نفسه تلقائياً لأنه absolute + translateY(-50%)، هذا بس تناسق بصري */
+.header.is-scrolled .nav-toggle {
+  transform: translateY(-50%) scale(0.85);
+}
+
+.nav {
+  display: flex;
+  gap: 2rem;
+}
+
+.nav a {
+  font-weight: 500;
+  font-size: 0.95rem;
+}
+
+.nav a:hover {
+  color: var(--color-gold);
+}
+
+/* =========================================================
+   زر الهمبرغر — مخفي افتراضياً بشاشات الكمبيوتر، يبان بس
+   بالجوال (شوف @media max-width:640px تحت بقسم Responsive)
+   ========================================================= */
+.nav-toggle {
+  display: none;
+  position: absolute;
+  left: 1.5rem;
+  top: 50%;
+  transform: translateY(-50%);
+
+  flex-direction: column;
+  justify-content: center;
+  gap: 5px;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  z-index: 1;
+}
+
+.nav-toggle span {
+  display: block;
+  width: 100%;
+  height: 2px;
+  background: var(--color-ink);
+  transition:
+    transform 0.3s ease,
+    opacity 0.3s ease;
+}
+
+/* لما اللسان يكون مفتوح، الخطوط الثلاثة تتحول لعلامة X */
+.nav-toggle.is-active span:nth-child(1) {
+  transform: translateY(7px) rotate(45deg);
+}
+.nav-toggle.is-active span:nth-child(2) {
+  opacity: 0;
+}
+.nav-toggle.is-active span:nth-child(3) {
+  transform: translateY(-7px) rotate(-45deg);
+}
+
+/* =========================================================
+   اللسان المنسحب (Drawer) + طبقة التعتيم خلفه
+   مخفيين بالكامل بشاشات الكمبيوتر، يبانوا بس بالجوال.
+   مبني بثلاث مناطق (header / links / footer) موزعة بـ
+   justify-content: space-between عشان تملى الشاشة بالكامل
+   بشكل متوازن بدل ما تتكوم الروابط بالنص وتسيب فراغ تحتها.
+   ========================================================= */
+.mobile-drawer {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100vh;
+  width: 75%;
+  max-width: 300px;
+  background: var(--color-bg);
+  z-index: 1100; /* فوق الهيدر (1000)، وتحت الـ Preloader (9999) لو ظهر فجأة */
+
+  display: none; /* يتحول لـ flex بالجوال بس */
+  flex-direction: column;
+  justify-content: space-between;
+  overflow: hidden; /* عشان العلامة المائية تحت ما تطلع برا حدود اللسان */
+
+  box-shadow: 4px 0 24px rgba(0, 0, 0, 0.18);
+  transform: translateX(-100%);
+  transition: transform 0.35s ease;
+}
+
+.mobile-drawer.is-open {
+  transform: translateX(0);
+}
+
+/* علامة مائية خفيفة جداً بشعار المثلث — تكسر حدة اللون السادة
+   بدون ما تشتت الانتباه عن الروابط والنص فوقها */
+.mobile-drawer::before {
+  content: "";
+  position: absolute;
+  bottom: -40px;
+  left: -60px;
+  width: 320px;
+  height: 320px;
+  background: url("logo.png") no-repeat center / contain;
+  opacity: 0.05;
+  pointer-events: none;
+}
+
+/* ===== رأس اللسان: شعار صغير + زر إغلاق ===== */
+.mobile-drawer__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1.5rem 1.5rem 1.25rem;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.mobile-drawer__logo {
+  height: 40px;
+  width: auto;
+}
+
+.drawer-close {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
+  border: none;
+  border-radius: 50%;
+  background: var(--color-card);
+  color: var(--color-ink);
+  cursor: pointer;
+}
+
+/* ===== روابط اللسان ===== */
+.mobile-drawer__links {
+  position: relative; /* يضل فوق العلامة المائية */
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  padding: 0.5rem 1.5rem;
+}
+
+.mobile-drawer__links a {
+  padding: 1rem 0;
+  font-size: 1.15rem;
+  font-weight: 600;
+  text-align: right; /* محاذاة يمين بدل النص، أنسب لقراءة عربية RTL */
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1); /* فاصل رفيع وشفاف تحت كل رابط */
+}
+
+.mobile-drawer__links a:last-child {
+  border-bottom: none;
+}
+
+/* ===== تنسيقات الأكورديون (القائمة المنسدلة) ===== */
+
+/* زر الأكورديون الرئيسي ليطابق شكل الروابط العادية */
+.accordion-toggle {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding: 1rem 0;
+  font-size: 1.15rem;
+  font-weight: 600;
+  color: var(--color-ink);
+  background: transparent;
+  border: none;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+  cursor: pointer;
+  font-family: inherit;
+}
+
+/* حركة دوران السهم عند الفتح */
+.chevron {
+  transition: transform 0.3s ease;
+}
+.accordion-toggle.is-active .chevron {
+  transform: rotate(180deg);
+}
+
+/* حاوية الروابط الفرعية — مخفية افتراضياً بحركة ناعمة */
+.accordion-content {
+  max-height: 0;
+  overflow: hidden;
+  opacity: 0;
+  transition:
+    max-height 0.35s ease,
+    opacity 0.35s ease;
+  display: flex;
+  flex-direction: column;
+  /* إزاحة من اليمين لتمييزها كروابط فرعية */
+  padding-right: 1.25rem;
+  background: rgba(0, 0, 0, 0.02); /* لون خلفية خفيف جداً لتمييز القسم */
+}
+
+/* الكلاس الذي سيضيفه الجافاسكريبت لفتح القائمة */
+.accordion-content.is-open {
+  max-height: 300px; /* رقم يكفي لارتفاع الروابط الأربعة */
+  opacity: 1;
+}
+
+/* تنسيق الروابط الفرعية لتكون أصغر قليلاً */
+.accordion-content a {
+  padding: 0.85rem 0;
+  font-size: 1rem;
+  font-weight: 500;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.accordion-content a:last-child {
+  border-bottom: none;
+}
+
+/* ===== ذيل اللسان: عبارة ترحيبية + أيقونات التواصل ===== */
+.mobile-drawer__footer {
+  position: relative;
+  z-index: 1;
+  padding: 1.5rem;
+  border-top: 1px solid var(--color-border);
+}
+
+.mobile-drawer__slogan {
+  font-family: var(--font-display);
+  font-size: 1.05rem;
+  color: var(--color-copper);
+  text-align: center;
+  margin-bottom: 1rem;
+}
+
+.mobile-drawer__socials {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+}
+
+.mobile-drawer__socials a {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  background: var(--color-gold);
+  color: #fff;
+}
+
+.drawer-overlay {
+  display: none; /* يتحول لـ block بالجوال بس */
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.4);
+  z-index: 1050; /* فوق الهيدر، تحت اللسان نفسه */
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.35s ease;
+}
+
+.drawer-overlay.is-open {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+/* لو الزائر مفعّل "تقليل الحركة"، اللسان يظهر/يختفي فوري بدون انزلاق */
+@media (prefers-reduced-motion: reduce) {
+  .mobile-drawer,
+  .drawer-overlay,
+  .nav-toggle span {
+    transition: none;
+  }
+}
+
+/* ===== Hero ===== */
+.hero {
+  position: relative;
+  min-height: 100vh;
+  min-height: 100dvh; /* يراعي شريط العنوان بمتصفحات الجوال */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  text-align: center;
+  padding: 0.5rem 1.5rem 5rem;
+}
+
+.hero__bg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover; /* يملأ المساحة بدون تشويه، مهما كان مقاس الشاشة */
+}
+
+.hero__overlay {
+  position: absolute;
+  inset: 0;
+  /* طبقة تعتيم بني دافئ (نفس --color-ink بشفافية) فوق الفيديو.
+     كانت بيج فاتحة قبل — بس الفيديو نفسه فاتح ومزحوم، فالذهبي والبني فوق
+     بيج فاتح ما كان يبان. الحين الخلفية غامقة شوي والنصوص فاتحة فوقها.
+     أغمق شوي فوق (عشان الشعار والناف) وتحت (عشان الزر)، وأخف بالنص
+     عشان الفيديو يضل ظاهر. عدّل الأرقام (آخر رقم بكل سطر) لو حاب
+     الفيديو يبان أكثر أو أقل */
+  background: linear-gradient(
+    180deg,
+    rgba(43, 31, 20, 0.7) 0%,
+    rgba(43, 31, 20, 0.5) 35%,
+    rgba(43, 31, 20, 0.5) 65%,
+    rgba(43, 31, 20, 0.7) 100%
+  );
+}
+
+.hero__content {
+  position: relative;
+  z-index: 1;
+  max-width: 860px; /* عريض كفاية عشان العنوان الكبير يطلع بسطر واحد على الكمبيوتر */
+  margin: 0 auto;
+
+  /* ظل خفيف جداً خلف كل نصوص الهيرو — يفصلها عن أي لقطة فاتحة
+     بالفيديو بدون ما يبان كـ"ظل" واضح */
+  text-shadow: 0 1px 12px rgba(0, 0, 0, 0.35);
+}
+
+/* نصوص الهيرو فاتحة لأنها فوق التعتيم الغامق — بنفس ألوان قسم الـ Scrollytelling.
+   أحجامها تكبر تدريجياً مع عرض الشاشة (clamp): على الجوال تضل نفس حجمها
+   القديم، وعلى الكمبيوتر تكبر عشان ما تطلع صغيرة بالنسبة للشاشة الكبيرة */
+.hero__eyebrow {
+  color: var(--color-gold-light);
+  font-size: clamp(0.9rem, 0.6rem + 0.6vw, 1.15rem); /* جوال ~14px ← كمبيوتر ~18px */
+  font-weight: 500;
+  margin-bottom: 1rem;
+}
+
+.hero h1 {
+  color: var(--color-cream);
+  font-size: clamp(2rem, 1rem + 2.6vw, 3.4rem); /* جوال ~32px ← كمبيوتر ~54px */
+  line-height: 1.35;
+  margin-bottom: 1.25rem;
+}
+
+.hero__text {
+  color: var(--color-cream);
+  opacity: 0.92;
+  font-size: clamp(1rem, 0.8rem + 0.4vw, 1.25rem); /* جوال ~16px ← كمبيوتر ~20px */
+  margin-bottom: 2rem;
+}
+
+/* زر الهيرو معكوس الألوان — الزر الغامق العادي كان بيضيع فوق الخلفية الغامقة */
+.hero .btn {
+  background: var(--color-cream);
+  border-color: var(--color-cream);
+  color: var(--color-ink);
+  text-shadow: none; /* ما نبي ظل نصوص الهيرو يوصل لكتابة الزر — يخليها مغبشة */
+}
+
+.hero .btn:hover {
+  background: transparent;
+  color: var(--color-cream);
+}
+
+.btn {
+  display: inline-block;
+  background: var(--color-ink);
+  color: var(--color-bg);
+  padding: 0.85rem 2rem;
+  font-weight: 500;
+  border: 1px solid var(--color-ink);
+  transition:
+    background 0.2s ease,
+    color 0.2s ease;
+}
+
+.btn:hover {
+  background: transparent;
+  color: var(--color-ink);
+}
+
+/* =========================================================
+   Scrollytelling — قسم السرد السينمائي أثناء التمرير
+   (شوف script.js لمنطق حساب "progress" وتحريك الطبقات)
+   ========================================================= */
+
+/* الحاوية الخارجية طويلة (250vh) عشان تعطي "مسافة تمرير" كافية
+   لعرض التأثير كامل وهو مثبّت بالشاشة (sticky) تحتها */
+.scrollytelling {
+  position: relative;
+  height: 250vh;
+}
+
+.scrollytelling__sticky {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  background: var(--color-bg); /* نفس خلفية الصفحة بالبداية والنهاية */
+}
+
+/* طبقة التعتيم — تبدأ شفافة (تبان خلفية الصفحة العادية)،
+   JS يرفع شفافيتها لـ 1 بمنتصف القسم (يصير كل شي غامق) */
+/* طبقة التعتيم بالخلف (تأكد من z-index) */
+.scrollytelling__dark {
+  position: absolute;
+  inset: 0;
+  background: var(--color-ink);
+  opacity: 0;
+  z-index: 0;
+}
+
+/* حاوية القطار فوق التعتيم وتبدأ مخفية */
+.scrollytelling__marquee {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  opacity: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+}
+
+/* حل مشكلة اللغة العربية والفراغ هنا */
+.marquee-row {
+  width: 100%;
+  overflow: hidden;
+  display: flex;
+  direction: ltr; /* يجبر الحركة من اليسار لليمين برمجياً مهما كانت لغة الموقع */
+}
+
+.marquee-track {
+  display: flex;
+  width: max-content;
+}
+
+.marquee-group {
+  display: flex;
+  gap: 1rem;
+  padding-right: 1rem; /* يعوض الفراغ الأخير لتلتصق المجموعة الثانية بسلاسة */
+}
+
+/* السرعات */
+.marquee-row--1 .marquee-track {
+  animation: marqueeLeft 45s linear infinite;
+}
+.marquee-row--2 .marquee-track {
+  animation: marqueeRight 55s linear infinite;
+}
+.marquee-row--3 .marquee-track {
+  animation: marqueeLeft 38s linear infinite;
+}
+
+/* الحركة تسحب بنسبة 50% فقط لأن لدينا مجموعتين متطابقتين */
+@keyframes marqueeLeft {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+@keyframes marqueeRight {
+  from {
+    transform: translateX(-50%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+
+.marquee-img {
+  width: 150px;
+  height: 188px;
+  object-fit: cover;
+  border-radius: 10px;
+  flex-shrink: 0;
+
+  /* 3. تخفيف سطوع الصور أكثر لكي يبرز النص فوقها ولا يزعج العين */
+  opacity: 0.35;
+}
+
+.scrollytelling__text {
+  position: relative;
+  z-index: 3;
+  max-width: 550px;
+  padding: 0 1.5rem;
+  text-align: center;
+
+  font-family: var(--font-display);
+  font-size: clamp(1.5rem, 3.5vw, 2.2rem);
+
+  /* نفس الذهبي الفاتح المستخدم فوق الغامق بالهيرو — عشان الألوان موحّدة بكل الموقع */
+  color: var(--color-gold-light);
+
+  /* 2. ظل أسود قوي خلف النص ليفصله عن الصور تماماً ويبرزه */
+  text-shadow:
+    0px 4px 20px rgba(0, 0, 0, 0.9),
+    0px 0px 15px rgba(0, 0, 0, 0.9);
+
+  line-height: 1.6;
+  opacity: 0;
+}
+
+/* تبسيط بسيط بالجوال — صور أصغر ومسافة سكرول أقصر، بس الحركة
+   نفسها (CSS) خفيفة جداً على الأداء أصلاً، فما احتجنا نلغيها */
+@media (max-width: 900px) {
+  .scrollytelling {
+    height: 180vh;
+  }
+
+  .marquee-img {
+    width: 95px;
+    height: 119px;
+  }
+}
+
+/* لو الزائر مفعّل "تقليل الحركة"، نوقف حركة الصفوف كامل */
+@media (prefers-reduced-motion: reduce) {
+  .marquee-track {
+    animation: none;
+  }
+}
+
+/* ===== Sections ===== */
+.section {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 5rem 1.5rem;
+}
+
+.section--alt {
+  background: #efe5d3;
+  max-width: 100%;
+}
+
+.section--alt > * {
+  max-width: 1100px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.section__heading {
+  text-align: center;
+  margin-bottom: 3rem;
+}
+
+.section__heading h2 {
+  font-size: 2rem;
+  margin-bottom: 0.5rem;
+}
+
+.section__heading p {
+  color: var(--color-copper);
+}
+
+/* ===== Best Sellers Grid ===== */
+.bestsellers-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 2rem;
+}
+
+.product-card {
+  background: var(--color-card);
+  border: 1px solid var(--color-border);
+  overflow: hidden;
+}
+
+.product-card__image {
+  aspect-ratio: 1 / 1;
+  background: #e4d7c2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-copper);
+  font-size: 0.85rem;
+}
+
+.product-card__body {
+  padding: 1.25rem;
+  border-top: 3px solid var(--color-gold);
+}
+
+.product-card__body h3 {
+  font-size: 1.1rem;
+  margin-bottom: 0.35rem;
+}
+
+.product-card__body .category {
+  color: var(--color-copper);
+  font-size: 0.85rem;
+}
+
+.product-card__body .price {
+  color: var(--color-ink);
+  font-size: 0.85rem;
+  margin-top: 0.4rem;
+  opacity: 0.85;
+}
+
+/* علامة بداية الكتالوج — بدون ارتفاع، ما تأثر على الشكل، JS بس يراقبها */
+#catalogTopMarker {
+  height: 1px;
+}
+
+/* ===== Filters ===== */
+.filters {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.75rem;
+  margin-bottom: 2.5rem;
+}
+
+.filter-btn {
+  background: transparent;
+  border: 1px solid var(--color-copper);
+  color: var(--color-ink);
+  padding: 0.5rem 1.25rem;
+  font-family: var(--font-body);
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition:
+    background 0.2s ease,
+    color 0.2s ease;
+}
+
+.filter-btn.active,
+.filter-btn:hover {
+  background: var(--color-ink);
+  color: var(--color-bg);
+  border-color: var(--color-ink);
+}
+
+/* ===== Catalog Grid (أصغر من Best Sellers) ===== */
+.catalog-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 1.5rem;
+}
+
+.catalog-grid .product-card__image {
+  font-size: 0.75rem;
+}
+
+.catalog-grid .product-card__body {
+  padding: 1rem;
+  border-top-width: 2px;
+}
+
+.catalog-grid .product-card__body h3 {
+  font-size: 1rem;
+}
+
+/* ===== زر "عرض المزيد" (بس بفلتر الكل) ===== */
+.load-more-wrap {
+  text-align: center;
+  margin-top: 2.5rem;
+}
+
+.load-more-btn {
+  display: none; /* JS يبديها flex/inline-block لما يكون فيه منتجات ما ظهرت بعد */
+  background: transparent;
+  color: var(--color-ink);
+}
+
+.load-more-btn.is-visible {
+  display: inline-block;
+}
+
+/* ===== About ===== */
+.about {
+  max-width: 650px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.about h2 {
+  font-size: 1.75rem;
+  margin-bottom: 1.25rem;
+}
+
+/* ===== Contact ===== */
+.section--contact {
+  text-align: center;
+}
+
+.section--contact h2 {
+  font-size: 1.9rem;
+  margin-bottom: 0.75rem;
+}
+
+.section--contact > p {
+  color: var(--color-copper);
+  margin-bottom: 2rem;
+}
+
+.btn--whatsapp {
+  background: var(--color-gold);
+  border-color: var(--color-gold);
+  color: var(--color-ink);
+}
+
+.btn--whatsapp:hover {
+  background: transparent;
+  color: var(--color-ink);
+}
+
+.social-links {
+  margin-top: 2rem;
+  display: flex;
+  justify-content: center;
+  gap: 2rem;
+}
+
+.social-links a {
+  font-weight: 500;
+  border-bottom: 1px solid var(--color-ink);
+  padding-bottom: 2px;
+}
+
+/* =========================================================
+   تأثير الظهور عند التمرير (Scroll Reveal)
+   يشتغل مع Intersection Observer بـ script.js:
+   العنصر يبدأ مخفي ومنزاح شوي لتحت، ولما يوصله scroll
+   يضيف له JS كلاس "is-visible" فيظهر بنعومة لفوق.
+   ========================================================= */
+.animate-in {
+  opacity: 0;
+  transform: translateY(50px);
+  transition:
+    opacity 0.7s ease,
+    transform 0.7s ease;
+}
+
+.animate-in.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* لو الزائر مفعّل "تقليل الحركة" بجهازه، نلغي الأنيميشن ونوريه المحتوى مباشرة */
+@media (prefers-reduced-motion: reduce) {
+  .animate-in {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+}
+
+/* =========================================================
+   زر واتساب عائم
+   ========================================================= */
+.floating-whatsapp {
+  position: fixed;
+  bottom: 1.5rem;
+  left: 1.5rem; /* الجانب الأيسر بالشاشة (الموقع RTL) */
+  z-index: 50;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+
+  background: #25d366; /* اللون الرسمي لواتساب — يميزه فوراً كزر واتساب */
+  color: #fff;
+  font-size: 0.7rem;
+  font-weight: 700;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.25);
+
+  opacity: 1;
+  transform: scale(1);
+  transition:
+    opacity 0.3s ease,
+    transform 0.3s ease;
+}
+
+.floating-whatsapp:hover {
+  transform: scale(1.08);
+}
+
+/* يضيفه JS لما قسم "تواصل معنا" (اللي فيه زر واتساب أصلي) يبان بالشاشة */
+.floating-whatsapp.is-hidden {
+  opacity: 0;
+  transform: scale(0.8);
+  pointer-events: none;
+}
+
+/* =========================================================
+   زر الرجوع لأعلى الكتالوج
+   ========================================================= */
+.back-to-catalog {
+  position: fixed;
+  bottom: 1.5rem;
+  left: 1.5rem;
+  z-index: 50;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  border: none;
+  cursor: pointer;
+
+  background: var(--color-ink);
+  color: var(--color-bg);
+  font-size: 1.2rem;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.25);
+
+  opacity: 0;
+  transform: scale(0.8);
+  pointer-events: none;
+  transition:
+    opacity 0.3s ease,
+    transform 0.3s ease,
+    bottom 0.3s ease;
+}
+
+/* يضيفه JS لما الزائر يتجاوز قسم "جميع المنتجات" نزولاً */
+.back-to-catalog.is-visible {
+  opacity: 1;
+  transform: scale(1);
+  pointer-events: auto;
+}
+
+/* لما زر الواتساب العائم ظاهر بنفس الوقت، نرفع زر الرجوع فوقه
+   عشان ما يتراكبوا فوق بعض */
+.back-to-catalog.is-stacked {
+  bottom: 5.5rem;
+}
+
+/* ===== Footer ===== */
+.footer {
+  text-align: center;
+  padding: 2rem 1.5rem;
+  background: var(--color-ink);
+  color: var(--color-bg);
+  font-size: 0.85rem;
+}
+
+/* ===== Responsive ===== */
+@media (max-width: 640px) {
+  :root {
+    /* الهيدر بالجوال أقصر (الشعار ينصغر لـ 70px تحت) — نعدّل التعويض
+       عشان ما تصير فجوة فاضية زيادة فوق كل قسم */
+    --header-height: 110px;
+  }
+
+  .nav {
+    display: none; /* نستبدله بزر الهمبرغر + اللسان المنسحب — gap/font-size القديمة صارت بلا فايدة بما إنه مخفي */
+  }
+
+  /* بدون الناف، الشعار صار العنصر الوحيد جوا header__inner —
+     نخليه يتمركز بالنص تلقائياً (الهمبرغر برا التدفق بالـ absolute) */
+  .header__inner {
+    justify-content: center;
+  }
+
+  .nav-toggle {
+    display: flex; /* يبان بس بالجوال */
+  }
+
+  .mobile-drawer {
+    display: flex;
+  }
+
+  .drawer-overlay {
+    display: block;
+  }
+
+  .hero {
+    /* أضفنا مساحة علوية تحسب حساب ارتفاع الهيدر لكي لا تلتصق محتويات الهيرو بالشعار */
+    padding: calc(var(--header-height) + 0.5rem) 1.25rem 3rem;
+  }
+  .section {
+    padding: 3.5rem 1.25rem;
+  }
+
+  /* --- التعديلات الجديدة للصور --- */
+
+  /* 1. تصغير شعار كوكب ليناسب الهيدر في الجوال */
+  .brand-logo {
+    height: 70px; /* جرب 60px أو 70px بدلاً من 109px */
+  }
+
+  /* 2. كود سحري لمنع أي صورة أخرى في الموقع من الخروج عن حواف شاشة الجوال */
+  img {
+    max-width: 100%;
+    height: auto;
+  }
+
+  /* ترتيب قسمي "الأكثر مبيعاً" و "الكتالوج" في عمودين */
+  .bestsellers-grid,
+  .catalog-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.75rem; /* مسافة ممتازة للجوال لمنع التزاحم */
+  }
+
+  /* تعديل المساحات الداخلية للبطاقة لتناسب الحجم الجديد */
+  .product-card__body {
+    padding: 0.75rem 0.5rem;
+  }
+
+  /* تصغير النصوص لتكون أنيقة ومقروءة دون أن تكسر التصميم */
+  .product-card__body h3 {
+    font-size: 0.95rem;
+    margin-bottom: 0.25rem;
+  }
+
+  .product-card__body .category {
+    font-size: 0.75rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .product-card__body .price {
+    font-size: 0.85rem;
+    line-height: 1.4; /* مسافة بين سطور الأسعار لتسهيل القراءة (مهم لمنتجاتك متعددة الأحجام) */
+  }
+}

@@ -1,0 +1,819 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Kawkab Handmade | منتجات تجميل وعناية سودانية يدوية الصنع</title>
+
+    <!-- خطوط عربية: El Messiri للعناوين (أنيق وعصري، يمشي مع خطوط الشعار الرفيعة)، Tajawal للنصوص -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=El+Messiri:wght@500;600;700&family=Tajawal:wght@300;400;500;700&display=swap"
+      rel="stylesheet"
+    />
+
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <!-- ===== Preloader / Splash Screen =====
+       يبان أول ما تفتح الصفحة، ويختفي تلقائياً بعد ما المحتوى يخلص تحميل
+       (الكود اللي يتحكم بالإخفاء موجود بـ script.js) -->
+    <div id="preloader" class="preloader">
+      <div class="preloader__logo-wrap">
+        <img
+          src="logo.png"
+          alt="Kawkab Handmade"
+          class="preloader__logo-face preloader__logo-face--front"
+        />
+        <img
+          src="logo.png"
+          alt=""
+          class="preloader__logo-face preloader__logo-face--back"
+        />
+      </div>
+    </div>
+
+    <!-- ===== Header ===== -->
+    <header class="header">
+      <div class="header__inner">
+        <!-- زر الهمبرغر — يبان بس بالجوال (max-width: 640px)، يفتح اللسان تحت -->
+        <button
+          id="navToggle"
+          class="nav-toggle"
+          aria-label="افتح القائمة"
+          aria-expanded="false"
+        >
+          <span></span>
+          <span></span>
+          <span></span>
+        </button>
+
+        <img src="logo.png" alt="Kawkab Handmade" class="brand-logo" />
+        <nav class="nav">
+          <a href="#bestsellers">الأكثر مبيعاً</a>
+          <a href="#catalog">جميع المنتجات</a>
+          <a href="#contact">تواصل معنا</a>
+        </nav>
+      </div>
+    </header>
+
+    <!-- ===== قائمة الجوال (اللسان المنسحب) =====
+       تبان بس بالجوال — نفس روابط الناف، تنسحب من جهة اليسار
+       لما تضغط زر الهمبرغر فوق. مخفية بالكامل بشاشات الكمبيوتر -->
+    <aside
+      id="mobileDrawer"
+      class="mobile-drawer"
+      aria-label="القائمة الرئيسية"
+    >
+      <!-- رأس اللسان: شعار صغير + زر إغلاق مخصص —
+           لازم زر إغلاق منفصل هنا لأن اللسان نفسه (z-index أعلى)
+           يغطي زر الهمبرغر الأصلي بالهيدر وهو مفتوح، فما تقدر تشوفه
+           ولا تضغطه عشان تقفل بدون هذا الزر -->
+      <div class="mobile-drawer__header">
+        <img src="logo.png" alt="Kawkab Handmade" class="mobile-drawer__logo" />
+        <button
+          id="drawerClose"
+          class="drawer-close"
+          aria-label="إغلاق القائمة"
+        >
+          <svg
+            viewBox="0 0 24 24"
+            width="20"
+            height="20"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2.2"
+            stroke-linecap="round"
+            aria-hidden="true"
+          >
+            <path d="M6 6l12 12M18 6L6 18" />
+          </svg>
+        </button>
+      </div>
+
+      <nav class="mobile-drawer__links">
+        <a href="#bestsellers">الأكثر مبيعاً</a>
+
+        <!-- ===== قائمة الأكورديون لجميع المنتجات ===== -->
+        <div class="drawer-accordion">
+          <button
+            id="accordionToggle"
+            class="accordion-toggle"
+            aria-expanded="false"
+          >
+            <span>جميع المنتجات</span>
+            <!-- أيقونة السهم -->
+            <svg
+              class="chevron"
+              viewBox="0 0 24 24"
+              width="18"
+              height="18"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <polyline points="6 9 12 15 18 9"></polyline>
+            </svg>
+          </button>
+
+          <!-- الروابط الفرعية (مخفية افتراضياً) -->
+          <!-- الروابط الفرعية المربوطة بنظام الفلترة -->
+          <div id="accordionContent" class="accordion-content">
+            <a href="#catalog" data-filter="عطور">عطور</a>
+            <a href="#catalog" data-filter="بخور">بخور</a>
+            <a href="#catalog" data-filter="منتجات الجسم والشعر"
+              >منتجات الجسم والشعر</a
+            >
+            <a href="#catalog" data-filter="مرشات">مرشات</a>
+          </div>
+        </div>
+        <!-- ======================================= -->
+
+        <a href="#contact">تواصل معنا</a>
+      </nav>
+      <div class="mobile-drawer__footer">
+        <p class="mobile-drawer__slogan">صناعة يدوية بكل حب</p>
+        <div class="mobile-drawer__socials">
+          <a
+            href="https://wa.me/249900087466?text=%D9%85%D8%B1%D8%AD%D8%A8%D8%A7%D9%8B%D8%8C%20%D8%AA%D8%B5%D9%81%D8%AD%D8%AA%20%D9%83%D8%AA%D8%A7%D9%84%D9%88%D8%AC%20%D9%83%D9%88%D9%83%D8%A8%20%D9%88%D8%A3%D8%B1%D8%BA%D8%A8%20%D8%A8%D8%A7%D9%84%D8%B7%D9%84%D8%A8%20%2F%20%D8%A7%D9%84%D8%A7%D8%B3%D8%AA%D9%81%D8%B3%D8%A7%D8%B1"
+            target="_blank"
+            aria-label="واتساب"
+          >
+            <svg
+              viewBox="0 0 24 24"
+              width="18"
+              height="18"
+              fill="currentColor"
+              aria-hidden="true"
+            >
+              <path
+                d="M12.04 2c-5.5 0-9.96 4.46-9.96 9.96 0 1.76.46 3.48 1.34 5L2 22l5.2-1.36a9.94 9.94 0 0 0 4.84 1.23h.01c5.5 0 9.96-4.46 9.96-9.96S17.54 2 12.04 2Zm0 18.15h-.01a8.2 8.2 0 0 1-4.18-1.15l-.3-.18-3.1.81.83-3.02-.2-.31a8.19 8.19 0 0 1-1.26-4.34c0-4.53 3.69-8.22 8.23-8.22 2.2 0 4.26.86 5.82 2.41a8.17 8.17 0 0 1 2.41 5.82c0 4.53-3.7 8.18-8.24 8.18Zm4.52-6.16c-.25-.12-1.47-.72-1.7-.81-.23-.08-.39-.12-.56.13-.17.25-.64.81-.78.97-.14.17-.29.19-.54.06-.25-.12-1.04-.38-1.98-1.22-.73-.65-1.23-1.46-1.37-1.7-.14-.25-.02-.38.11-.51.11-.11.25-.29.37-.43.12-.15.16-.25.25-.42.08-.17.04-.31-.02-.44-.06-.12-.56-1.35-.77-1.85-.2-.48-.41-.42-.56-.43h-.48c-.17 0-.44.06-.67.31-.23.25-.87.85-.87 2.08s.89 2.41 1.02 2.58c.12.17 1.75 2.67 4.24 3.74.59.26 1.05.41 1.41.52.59.19 1.13.16 1.55.1.47-.07 1.47-.6 1.68-1.18.21-.58.21-1.08.14-1.18-.06-.1-.23-.16-.48-.28Z"
+              />
+            </svg>
+          </a>
+          <a
+            href="https://www.instagram.com/kawkab.sd?stkn=dG9mcHRtbGc0ZTEz"
+            target="_blank"
+            aria-label="إنستغرام"
+          >
+            <svg
+              viewBox="0 0 24 24"
+              width="18"
+              height="18"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.8"
+              aria-hidden="true"
+            >
+              <rect x="3" y="3" width="18" height="18" rx="5" />
+              <circle cx="12" cy="12" r="4" />
+              <circle
+                cx="17.2"
+                cy="6.8"
+                r="1.1"
+                fill="currentColor"
+                stroke="none"
+              />
+            </svg>
+          </a>
+          <a
+            href="https://www.tiktok.com/@kawkab.sd?_r=1&_t=ZS-99wF7hDNFJp"
+            target="_blank"
+            aria-label="تيك توك"
+          >
+            <svg
+              viewBox="0 0 24 24"
+              width="18"
+              height="18"
+              fill="currentColor"
+              aria-hidden="true"
+            >
+              <path
+                d="M16.5 2h-3v13.2a3.1 3.1 0 1 1-2.2-2.97V9.1a6.1 6.1 0 1 0 5.2 6.03V8.3a7.6 7.6 0 0 0 4.5 1.46V6.7a4.6 4.6 0 0 1-4.5-4.7Z"
+              />
+            </svg>
+          </a>
+        </div>
+      </div>
+    </aside>
+    <div id="drawerOverlay" class="drawer-overlay"></div>
+
+    <!-- ===== Hero ===== -->
+    <section class="hero">
+      <!-- خلفية الفيديو/GIF — استبدل مصدر الفيديو بالملف اللي بتضيفه.
+         لو بتستخدم GIF بدل فيديو، احذف عنصر <video> واستخدم:
+         <img class="hero__bg" src="hero-bg.gif" alt=""> بدلاً منه -->
+      <video class="hero__bg" autoplay muted loop playsinline>
+        <source src="hero-bg.mp4" type="video/mp4" />
+      </video>
+      <div class="hero__overlay"></div>
+
+      <div class="hero__content">
+        <p class="hero__eyebrow">
+          صناعة يدوية سودانية · مكونات طبيعية مختارة بعناية
+        </p>
+        <h1>عناية وجمال، بلمسة سودانية أصيلة</h1>
+        <p class="hero__text">
+          عطور، بخور، دلكة سودانية، زيوت طبيعية، ومنتجات للعناية بالجسم والشعر —
+          كل قطعة تُصنع يدوياً بحب واهتمام بكل التفاصيل.
+        </p>
+        <a href="#bestsellers" class="btn">اكتشف مجموعتنا</a>
+      </div>
+    </section>
+
+    <!-- =========================================================
+         قسم "Scrollytelling" — تجربة سينمائية أثناء التمرير:
+         3 صفوف صور تتحرك أفقياً زي "قطار" بخلفية القسم (CSS
+         بحت، بدون ارتباط بالسكرول — أخف بكثير على الأداء)،
+         والخلفية تعتم تدريجياً حسب موقعك بالتمرير (JS)، ونص
+         ذهبي يظهر بالمنتصف، وبعدين كل شي يرجع للون الفاتح
+         العادي قبل قسم "الأكثر مبيعاً".
+
+         الاتجاه: الصف 1 والصف 3 يتحركوا من اليمين لليسار،
+         الصف 2 بالعكس (من اليسار لليمين) — يكسر الرتابة.
+         كل صف بسرعة مختلفة شوي (شوف animation-duration بالـ CSS)
+         عشان ما تبين متزامنة بشكل آلي واضح.
+
+         الحركة نفسها (CSS) شغالة طول الوقت بالخلفية، بس نوقفها
+         لو القسم برا الشاشة (IntersectionObserver بـ script.js)
+         توفير للمعالجة، ونعطلها كامل لو الزائر مفعّل "تقليل
+         الحركة" (@media prefers-reduced-motion بالـ CSS).
+         ========================================================= -->
+    <!-- =========================================================
+     قسم "Scrollytelling" — التجربة السينمائية
+     ========================================================= -->
+    <!-- =========================================================
+     قسم "Scrollytelling" — التجربة السينمائية (النسخة النهائية السلسة)
+     ========================================================= -->
+    <section id="scrollytelling" class="scrollytelling">
+      <div class="scrollytelling__sticky">
+        <!-- حاوية القطارات المتحركة -->
+        <div class="scrollytelling__marquee">
+          <!-- ================= الصف الأول ================= -->
+          <div class="marquee-row marquee-row--1">
+            <div class="marquee-track">
+              <!-- المجموعة الأولى (14 صورة: 7 مكررة مرتين) -->
+              <div class="marquee-group">
+                <img
+                  src="images/scrolly-apple.webp"
+                  alt="تفاح"
+                  class="marquee-img"
+                />
+                <img
+                  src="images/scrolly-cardamom.webp"
+                  alt="هيل"
+                  class="marquee-img"
+                />
+                <img
+                  src="images/scrolly-frankincensewith_taifRose.webp"
+                  alt="لبان"
+                  class="marquee-img"
+                />
+                <img
+                  src="images/scrolly-multiple_strawberries.webp"
+                  alt="فراولة"
+                  class="marquee-img"
+                />
+                <img
+                  src="images/scrolly-orange.webp"
+                  alt="برتقال"
+                  class="marquee-img"
+                />
+                <img
+                  src="images/scrolly-oudpowder.webp"
+                  alt="عود"
+                  class="marquee-img"
+                />
+                <img
+                  src="images/scrolly-sugarcane.webp"
+                  alt="قصب"
+                  class="marquee-img"
+                />
+                <!-- التكرار الداخلي لزيادة العرض -->
+                <img
+                  src="images/scrolly-apple.webp"
+                  alt="تفاح"
+                  class="marquee-img"
+                />
+                <img
+                  src="images/scrolly-cardamom.webp"
+                  alt="هيل"
+                  class="marquee-img"
+                />
+                <img
+                  src="images/scrolly-frankincensewith_taifRose.webp"
+                  alt="لبان"
+                  class="marquee-img"
+                />
+                <img
+                  src="images/scrolly-multiple_strawberries.webp"
+                  alt="فراولة"
+                  class="marquee-img"
+                />
+                <img
+                  src="images/scrolly-orange.webp"
+                  alt="برتقال"
+                  class="marquee-img"
+                />
+                <img
+                  src="images/scrolly-oudpowder.webp"
+                  alt="عود"
+                  class="marquee-img"
+                />
+                <img
+                  src="images/scrolly-sugarcane.webp"
+                  alt="قصب"
+                  class="marquee-img"
+                />
+              </div>
+
+              <!-- المجموعة الثانية (نسخة طبق الأصل من الأولى) -->
+              <div class="marquee-group">
+                <img
+                  src="images/scrolly-apple.webp"
+                  alt="تفاح"
+                  class="marquee-img"
+                />
+                <img
+                  src="images/scrolly-cardamom.webp"
+                  alt="هيل"
+                  class="marquee-img"
+                />
+                <img
+                  src="images/scrolly-frankincensewith_taifRose.webp"
+                  alt="لبان"
+                  class="marquee-img"
+                />
+                <img
+                  src="images/scrolly-multiple_strawberries.webp"
+                  alt="فراولة"
+                  class="marquee-img"
+                />
+                <img
+                  src="images/scrolly-orange.webp"
+                  alt="برتقال"
+                  class="marquee-img"
+                />
+                <img
+                  src="images/scrolly-oudpowder.webp"
+                  alt="عود"
+                  class="marquee-img"
+                />
+                <img
+                  src="images/scrolly-sugarcane.webp"
+                  alt="قصب"
+                  class="marquee-img"
+                />
+                <img
+                  src="images/scrolly-apple.webp"
+                  alt="تفاح"
+                  class="marquee-img"
+                />
+                <img
+                  src="images/scrolly-cardamom.webp"
+                  alt="هيل"
+                  class="marquee-img"
+                />
+                <img
+                  src="images/scrolly-frankincensewith_taifRose.webp"
+                  alt="لبان"
+                  class="marquee-img"
+                />
+                <img
+                  src="images/scrolly-multiple_strawberries.webp"
+                  alt="فراولة"
+                  class="marquee-img"
+                />
+                <img
+                  src="images/scrolly-orange.webp"
+                  alt="برتقال"
+                  class="marquee-img"
+                />
+                <img
+                  src="images/scrolly-oudpowder.webp"
+                  alt="عود"
+                  class="marquee-img"
+                />
+                <img
+                  src="images/scrolly-sugarcane.webp"
+                  alt="قصب"
+                  class="marquee-img"
+                />
+              </div>
+            </div>
+          </div>
+
+          <!-- ================= الصف الثاني ================= -->
+          <div class="marquee-row marquee-row--2">
+            <div class="marquee-track">
+              <!-- المجموعة الأولى (12 صورة مكررة) -->
+              <div class="marquee-group">
+                <img
+                  src="images/scrolly-apple_2.webp"
+                  alt="تفاح"
+                  class="marquee-img"
+                />
+                <img
+                  src="images/scrolly-Cloves.webp"
+                  alt="قرنفل"
+                  class="marquee-img"
+                />
+                <img
+                  src="images/scrolly-Lavender.webp"
+                  alt="لافندر"
+                  class="marquee-img"
+                />
+                <img
+                  src="images/scrolly-oil_apple.webp"
+                  alt="زيت"
+                  class="marquee-img"
+                />
+                <img
+                  src="images/scrolly-oud.webp"
+                  alt="عود"
+                  class="marquee-img"
+                />
+                <img
+                  src="images/scrolly-pear.webp"
+                  alt="كمثرى"
+                  class="marquee-img"
+                />
+                <img
+                  src="images/scrolly-apple_2.webp"
+                  alt="تفاح"
+                  class="marquee-img"
+                />
+                <img
+                  src="images/scrolly-Cloves.webp"
+                  alt="قرنفل"
+                  class="marquee-img"
+                />
+                <img
+                  src="images/scrolly-Lavender.webp"
+                  alt="لافندر"
+                  class="marquee-img"
+                />
+                <img
+                  src="images/scrolly-oil_apple.webp"
+                  alt="زيت"
+                  class="marquee-img"
+                />
+                <img
+                  src="images/scrolly-oud.webp"
+                  alt="عود"
+                  class="marquee-img"
+                />
+                <img
+                  src="images/scrolly-pear.webp"
+                  alt="كمثرى"
+                  class="marquee-img"
+                />
+              </div>
+
+              <!-- المجموعة الثانية (نسخة طبق الأصل) -->
+              <div class="marquee-group">
+                <img
+                  src="images/scrolly-apple_2.webp"
+                  alt="تفاح"
+                  class="marquee-img"
+                />
+                <img
+                  src="images/scrolly-Cloves.webp"
+                  alt="قرنفل"
+                  class="marquee-img"
+                />
+                <img
+                  src="images/scrolly-Lavender.webp"
+                  alt="لافندر"
+                  class="marquee-img"
+                />
+                <img
+                  src="images/scrolly-oil_apple.webp"
+                  alt="زيت"
+                  class="marquee-img"
+                />
+                <img
+                  src="images/scrolly-oud.webp"
+                  alt="عود"
+                  class="marquee-img"
+                />
+                <img
+                  src="images/scrolly-pear.webp"
+                  alt="كمثرى"
+                  class="marquee-img"
+                />
+                <img
+                  src="images/scrolly-apple_2.webp"
+                  alt="تفاح"
+                  class="marquee-img"
+                />
+                <img
+                  src="images/scrolly-Cloves.webp"
+                  alt="قرنفل"
+                  class="marquee-img"
+                />
+                <img
+                  src="images/scrolly-Lavender.webp"
+                  alt="لافندر"
+                  class="marquee-img"
+                />
+                <img
+                  src="images/scrolly-oil_apple.webp"
+                  alt="زيت"
+                  class="marquee-img"
+                />
+                <img
+                  src="images/scrolly-oud.webp"
+                  alt="عود"
+                  class="marquee-img"
+                />
+                <img
+                  src="images/scrolly-pear.webp"
+                  alt="كمثرى"
+                  class="marquee-img"
+                />
+              </div>
+            </div>
+          </div>
+
+          <!-- ================= الصف الثالث ================= -->
+          <div class="marquee-row marquee-row--3">
+            <div class="marquee-track">
+              <!-- المجموعة الأولى (12 صورة مكررة) -->
+              <div class="marquee-group">
+                <img
+                  src="images/scrolly-basil.webp"
+                  alt="ريحان"
+                  class="marquee-img"
+                />
+                <img
+                  src="images/scrolly-dhafrah.webp"
+                  alt="ظفرة"
+                  class="marquee-img"
+                />
+                <img
+                  src="images/scrolly-lime.webp"
+                  alt="ليمون"
+                  class="marquee-img"
+                />
+                <img
+                  src="images/scrolly-oil_drop.webp"
+                  alt="قطرة"
+                  class="marquee-img"
+                />
+                <img
+                  src="images/scrolly-oudpoder_2.webp"
+                  alt="مسحوق"
+                  class="marquee-img"
+                />
+                <img
+                  src="images/scrolly-pomegranate.webp"
+                  alt="رمان"
+                  class="marquee-img"
+                />
+                <img
+                  src="images/scrolly-basil.webp"
+                  alt="ريحان"
+                  class="marquee-img"
+                />
+                <img
+                  src="images/scrolly-dhafrah.webp"
+                  alt="ظفرة"
+                  class="marquee-img"
+                />
+                <img
+                  src="images/scrolly-lime.webp"
+                  alt="ليمون"
+                  class="marquee-img"
+                />
+                <img
+                  src="images/scrolly-oil_drop.webp"
+                  alt="قطرة"
+                  class="marquee-img"
+                />
+                <img
+                  src="images/scrolly-oudpoder_2.webp"
+                  alt="مسحوق"
+                  class="marquee-img"
+                />
+                <img
+                  src="images/scrolly-pomegranate.webp"
+                  alt="رمان"
+                  class="marquee-img"
+                />
+              </div>
+
+              <!-- المجموعة الثانية (نسخة طبق الأصل) -->
+              <div class="marquee-group">
+                <img
+                  src="images/scrolly-basil.webp"
+                  alt="ريحان"
+                  class="marquee-img"
+                />
+                <img
+                  src="images/scrolly-dhafrah.webp"
+                  alt="ظفرة"
+                  class="marquee-img"
+                />
+                <img
+                  src="images/scrolly-lime.webp"
+                  alt="ليمون"
+                  class="marquee-img"
+                />
+                <img
+                  src="images/scrolly-oil_drop.webp"
+                  alt="قطرة"
+                  class="marquee-img"
+                />
+                <img
+                  src="images/scrolly-oudpoder_2.webp"
+                  alt="مسحوق"
+                  class="marquee-img"
+                />
+                <img
+                  src="images/scrolly-pomegranate.webp"
+                  alt="رمان"
+                  class="marquee-img"
+                />
+                <img
+                  src="images/scrolly-basil.webp"
+                  alt="ريحان"
+                  class="marquee-img"
+                />
+                <img
+                  src="images/scrolly-dhafrah.webp"
+                  alt="ظفرة"
+                  class="marquee-img"
+                />
+                <img
+                  src="images/scrolly-lime.webp"
+                  alt="ليمون"
+                  class="marquee-img"
+                />
+                <img
+                  src="images/scrolly-oil_drop.webp"
+                  alt="قطرة"
+                  class="marquee-img"
+                />
+                <img
+                  src="images/scrolly-oudpoder_2.webp"
+                  alt="مسحوق"
+                  class="marquee-img"
+                />
+                <img
+                  src="images/scrolly-pomegranate.webp"
+                  alt="رمان"
+                  class="marquee-img"
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- طبقة التعتيم والنص -->
+        <div id="scrollyDark" class="scrollytelling__dark"></div>
+        <p id="scrollyText" class="scrollytelling__text">
+          مكونات طبيعية.. تُعتق بحب لتلامس حواسك
+        </p>
+      </div>
+    </section>
+
+    <!-- ===== Best Sellers ===== -->
+    <section id="bestsellers" class="section">
+      <div class="section__heading animate-in">
+        <h2>الأكثر مبيعاً</h2>
+        <p>المنتجات المفضلة لدى عملائنا</p>
+      </div>
+
+      <div class="bestsellers-grid" id="bestsellersGrid">
+        <!-- تُبنى تلقائياً من script.js عبر مصفوفة bestSellers -->
+      </div>
+    </section>
+
+    <!-- ===== Full Catalog ===== -->
+    <section id="catalog" class="section section--alt">
+      <!-- علامة غير مرئية تمثّل "بداية" القسم بالضبط —
+         نراقبها بدل القسم كامل عشان زر الرجوع يبان أول ما
+         تتجاوز بداية الكتالوج، مب لازم توصل آخره -->
+      <div id="catalogTopMarker"></div>
+
+      <div class="section__heading animate-in">
+        <h2>جميع المنتجات</h2>
+        <p>تصفح مجموعتنا الكاملة</p>
+      </div>
+
+      <div class="filters" id="filters">
+        <!-- تُبنى تلقائياً حسب الفئات الموجودة بالمنتجات -->
+      </div>
+
+      <div class="catalog-grid" id="catalogGrid">
+        <!-- تُبنى تلقائياً من script.js عبر مصفوفة allProducts -->
+      </div>
+
+      <!-- يبان بس بفلتر "الكل" (لتحسين سرعة تحميل الصفحة مع 48 منتج) —
+           script.js يظبط ظهوره/اختفاؤه حسب باقي المنتجات -->
+      <div class="load-more-wrap">
+        <button id="loadMoreBtn" class="btn load-more-btn">عرض المزيد</button>
+      </div>
+    </section>
+
+    <!-- ===== About Section (اختياري - عدّله بقصة حقيقية) ===== -->
+    <section class="section">
+      <div class="about animate-in">
+        <h2>قصتنا</h2>
+        <p>
+          بدأ مشروعنا من شغف عائلي بصناعة العطور ومنتجات العناية التقليدية،
+          وتحول إلى مشروع صغير نقدم من خلاله عطوراً وبخوراً ودلكة سودانية
+          ومنتجات طبيعية للعناية بالجسم والشعر، مصنوعة يدوياً بحب واهتمام بكل
+          التفاصيل.
+          <!-- عدّل هذي الفقرة بقصة حقيقية عن كيف بدأ المشروع -->
+        </p>
+      </div>
+    </section>
+
+    <!-- ===== Contact ===== -->
+    <section
+      id="contact"
+      class="section section--alt section--contact animate-in"
+    >
+      <h2>تواصل معنا</h2>
+      <p>لأي استفسار أو طلب، تواصل معنا مباشرة عبر واتساب</p>
+      <!-- مرحباً، تصفحت كتالوج كوكب وأرغب بالطلب / الاستفسار -->
+      <a
+        href="https://wa.me/249900087466?text=%D9%85%D8%B1%D8%AD%D8%A8%D8%A7%D9%8B%D8%8C%20%D8%AA%D8%B5%D9%81%D8%AD%D8%AA%20%D9%83%D8%AA%D8%A7%D9%84%D9%88%D8%AC%20%D9%83%D9%88%D9%83%D8%A8%20%D9%88%D8%A3%D8%B1%D8%BA%D8%A8%20%D8%A8%D8%A7%D9%84%D8%B7%D9%84%D8%A8%20%2F%20%D8%A7%D9%84%D8%A7%D8%B3%D8%AA%D9%81%D8%B3%D8%A7%D8%B1"
+        class="btn btn--whatsapp"
+        target="_blank"
+      >
+        تواصل عبر واتساب
+      </a>
+      <div class="social-links">
+        <a
+          href="https://www.instagram.com/kawkab.sd?stkn=dG9mcHRtbGc0ZTEz"
+          target="_blank"
+          >إنستغرام</a
+        >
+        <a
+          href="https://www.tiktok.com/@kawkab.sd?_r=1&_t=ZS-99wF7hDNFJp"
+          target="_blank"
+          >تيك توك</a
+        >
+        <a href="mailto:kawkab.sud@gmail.com">البريد الإلكتروني</a>
+      </div>
+    </section>
+
+    <footer class="footer">
+      <p>© 2026 Kawkab Handmade — جميع الحقوق محفوظة</p>
+    </footer>
+
+    <!-- ===== زر واتساب عائم =====
+       يظهر بأي مكان بالصفحة، ويختفي تلقائياً لما قسم "تواصل معنا"
+       (اللي فيه زر واتساب أصلي) يبان بالشاشة -->
+    <!-- مرحباً، تصفحت كتالوج كوكب وأرغب بالطلب / الاستفسار -->
+    <a
+      href="https://wa.me/249900087466?text=%D9%85%D8%B1%D8%AD%D8%A8%D8%A7%D9%8B%D8%8C%20%D8%AA%D8%B5%D9%81%D8%AD%D8%AA%20%D9%83%D8%AA%D8%A7%D9%84%D9%88%D8%AC%20%D9%83%D9%88%D9%83%D8%A8%20%D9%88%D8%A3%D8%B1%D8%BA%D8%A8%20%D8%A8%D8%A7%D9%84%D8%B7%D9%84%D8%A8%20%2F%20%D8%A7%D9%84%D8%A7%D8%B3%D8%AA%D9%81%D8%B3%D8%A7%D8%B1"
+      id="floatingWhatsapp"
+      class="floating-whatsapp"
+      target="_blank"
+      aria-label="تواصل عبر واتساب"
+    >
+      <svg
+        viewBox="0 0 24 24"
+        width="28"
+        height="28"
+        fill="currentColor"
+        aria-hidden="true"
+      >
+        <path
+          d="M12.04 2c-5.5 0-9.96 4.46-9.96 9.96 0 1.76.46 3.48 1.34 5L2 22l5.2-1.36a9.94 9.94 0 0 0 4.84 1.23h.01c5.5 0 9.96-4.46 9.96-9.96S17.54 2 12.04 2Zm0 18.15h-.01a8.2 8.2 0 0 1-4.18-1.15l-.3-.18-3.1.81.83-3.02-.2-.31a8.19 8.19 0 0 1-1.26-4.34c0-4.53 3.69-8.22 8.23-8.22 2.2 0 4.26.86 5.82 2.41a8.17 8.17 0 0 1 2.41 5.82c0 4.53-3.7 8.18-8.24 8.18Zm4.52-6.16c-.25-.12-1.47-.72-1.7-.81-.23-.08-.39-.12-.56.13-.17.25-.64.81-.78.97-.14.17-.29.19-.54.06-.25-.12-1.04-.38-1.98-1.22-.73-.65-1.23-1.46-1.37-1.7-.14-.25-.02-.38.11-.51.11-.11.25-.29.37-.43.12-.15.16-.25.25-.42.08-.17.04-.31-.02-.44-.06-.12-.56-1.35-.77-1.85-.2-.48-.41-.42-.56-.43h-.48c-.17 0-.44.06-.67.31-.23.25-.87.85-.87 2.08s.89 2.41 1.02 2.58c.12.17 1.75 2.67 4.24 3.74.59.26 1.05.41 1.41.52.59.19 1.13.16 1.55.1.47-.07 1.47-.6 1.68-1.18.21-.58.21-1.08.14-1.18-.06-.1-.23-.16-.48-.28Z"
+        />
+      </svg>
+    </a>
+
+    <!-- ===== زر الرجوع لأعلى الكتالوج =====
+       يظهر بس بعد ما تتجاوز قسم "جميع المنتجات" (بداية القسم، مو نهايته)، ولما تضغطه
+       يرجعك لأول نفس القسم (وين الفلاتر)، مب لأعلى الصفحة كلها -->
+    <button
+      id="backToCatalog"
+      class="back-to-catalog"
+      aria-label="ارجع لأعلى قائمة المنتجات"
+    >
+      <svg
+        viewBox="0 0 24 24"
+        width="22"
+        height="22"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2.5"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        aria-hidden="true"
+      >
+        <path d="M12 19V5M5 12l7-7 7 7" />
+      </svg>
+    </button>
+
+    <script src="script.js"></script>
+  </body>
+</html>
