@@ -5,8 +5,6 @@ There is no checkout: visitors browse the catalog and place orders through Whats
 
 **Live site:** https://kawkab-handmade.netlify.app
 
-![Kawkab Handmade homepage](docs/screenshot.png)
-
 ## Features
 
 - **Category filters:** the catalog filters products by category instantly, without reloading the page.
@@ -24,10 +22,13 @@ There is no checkout: visitors browse the catalog and place orders through Whats
 
 No frameworks, no libraries, and no build step.
 
+Hosted on Netlify with continuous deployment from GitHub.
+
 ## What I learned
 
-- **Performance for every visitor:** I converted all images to WebP so the
-  site stays fast on low-end devices and slow connections.
+- **Performance for every visitor:** I converted the scrollytelling images to
+  WebP and compressed the hero video from 5.6MB to 2.9MB, so the site stays
+  fast on low-end devices and slow connections.
 
 - **Acting on user feedback:** People who tested the site said the logo was
   hard to see over the hero video. I added a dark overlay that keeps the video
