@@ -5,6 +5,8 @@ There is no checkout: visitors browse the catalog and place orders through Whats
 
 **Live site:** https://kawkab-handmade.netlify.app
 
+![Kawkab Handmade on desktop and mobile](docs/screenshot.png)
+
 ## Features
 
 - **Category filters:** the catalog filters products by category instantly, without reloading the page.
